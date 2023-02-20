@@ -67,7 +67,7 @@ const createPath = (string, minLenght, extraSymbols) => {
 
       while (emptyLength >= extraSymbols.length) {
         string = extraSymbols.slice() + string.slice();
-        let length = string.length;
+        const length = string.length;
         emptyLength = minLenght - length;
       }
 
