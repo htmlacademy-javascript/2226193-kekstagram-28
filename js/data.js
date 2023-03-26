@@ -4,7 +4,7 @@ const PHOTO_COUNT = 25;
 const AVATAR_COUNT = 6;
 const LIKE_COUNT_MIN = 15;
 const LIKE_COUNT_MAX = 200;
-const COMMENT_COUNT_MAX = 3;
+const COMMENT_COUNT_MAX = 30;
 
 const DESCRIPTIONS = [
   'Красоты Болгарии',
