@@ -48,7 +48,7 @@ const generateComment = () => ({
   name: getRandomArrayElement(NAMES),
 });
 
-const generatePhotoDescription = () => {
+const generatePhotoWithComments = () => {
   const commentCount = getRandomInteger(1, COMMENT_COUNT_MAX);
   const photoComments = Array.from({length: commentCount}, generateComment);
 
@@ -61,6 +61,6 @@ const generatePhotoDescription = () => {
   };
 };
 
-const generatePhotos = () => Array.from({length: PHOTO_COUNT}, generatePhotoDescription);
+const generatePhotos = () => Array.from({length: PHOTO_COUNT}, generatePhotoWithComments);
 
 export {generatePhotos};

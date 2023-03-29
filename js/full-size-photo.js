@@ -5,17 +5,16 @@ const COMMENTS_LOAD_COUNT = 5;
 const body = document.querySelector('body');
 const fullSizePhotoModal = document.querySelector('.big-picture');
 const photoModalClose = fullSizePhotoModal.querySelector('.cancel');
-const commentCount = document.querySelector('.social__comment-count');
-const commentList = document.querySelector('.social__comments');
-const commentsLoader = document.querySelector('.comments-loader');
+const commentCount = fullSizePhotoModal.querySelector('.social__comment-count');
+const commentsList = fullSizePhotoModal.querySelector('.social__comments');
+const commentsLoader = fullSizePhotoModal.querySelector('.comments-loader');
+const commentTemplate = fullSizePhotoModal.querySelector('.social__comment');
 
-let comments = [];
+let comments;
 let commentsShown = 0;
 
 const createComment = ({avatar, name, message}) => {
-  const comment = document.createElement('li');
-  comment.innerHTML = '<img class="social__picture" src="{{аватар}}" alt="{{имя комментатора}}" width="35" height="35"> <p class="social__text">{{текст комментария}}</p>';
-  comment.classList.add('social__comment');
+  const comment = commentTemplate.cloneNode(true);
 
   comment.querySelector('.social__picture').src = avatar;
   comment.querySelector('.social__picture').alt = name;
@@ -24,24 +23,21 @@ const createComment = ({avatar, name, message}) => {
   return comment;
 };
 
-const renderComments = (data) => {
-  comments = data;
-
+const renderComments = () => {
   if (commentsShown >= comments.length) {
-    commentsLoader.classList.add('hidden');
     commentsShown = comments.length;
+    commentsLoader.classList.add('hidden');
   } else {
     commentsLoader.classList.remove('hidden');
   }
 
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < commentsShown; i++) {
-    const commentElement = createComment(comments[i]);
-    fragment.append(commentElement);
-  }
+  comments.slice(0, commentsShown).forEach((comment) => {
+    fragment.append(createComment(comment));
+  });
 
-  commentList.innerHTML = '';
-  commentList.append(fragment);
+  commentsList.innerHTML = '';
+  commentsList.append(fragment);
   commentCount.innerHTML = `${commentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
 };
 
@@ -92,12 +88,15 @@ const openFullSizePhotoModal = (picture) => {
   body.classList.add('modal-open');
   commentsLoader.classList.add('hidden');
   commentCount.classList.remove('hidden');
+
   document.addEventListener('keydown', onModalEscKeydown);
   document.addEventListener('keydown', onModalCloseEnterKeydown);
   document.addEventListener('click', onLoadMoreClick);
 
+  comments = picture.comments;
+
   renderPhotoDetails(picture);
-  renderComments(picture.comments);
+  renderComments(comments);
 };
 
 photoModalClose.addEventListener('click', onModalCloseClick);
