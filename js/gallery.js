@@ -1,7 +1,8 @@
 import {renderThumbnails} from './thumbnail.js';
-import {openFullSizePhotoModal} from './photo.js';
+import {openFullSizePhotoModal} from './full-size-photo.js';
 
 const thumbnailsList = document.querySelector('.pictures');
+const picturesTitle = thumbnailsList.querySelector('.pictures__title');
 
 const renderGallery = (pictures) => {
   thumbnailsList.addEventListener('click', (evt) => {
@@ -16,6 +17,7 @@ const renderGallery = (pictures) => {
     openFullSizePhotoModal(picture);
   });
 
+  picturesTitle.classList.remove('visually-hidden');
   renderThumbnails(pictures, thumbnailsList);
 };
 
