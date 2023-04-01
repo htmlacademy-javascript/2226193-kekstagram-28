@@ -22,7 +22,9 @@ const openEditImageModal = () => {
   imageOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
 
+  // eslint-disable-next-line no-use-before-define
   document.addEventListener('keydown', onEscKeydown);
+  // eslint-disable-next-line no-use-before-define
   imageModalCloseButton.addEventListener('click', onModalCloseClick);
 };
 
@@ -33,6 +35,7 @@ const closeEditImageModal = () => {
   pristine.reset();
   imageOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
+  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onEscKeydown);
 };
 
