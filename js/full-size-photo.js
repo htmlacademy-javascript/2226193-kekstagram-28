@@ -10,8 +10,8 @@ const commentsList = fullSizePhotoModal.querySelector('.social__comments');
 const commentsLoader = fullSizePhotoModal.querySelector('.comments-loader');
 const commentTemplate = fullSizePhotoModal.querySelector('.social__comment');
 
-let comments;
-let commentsShown = 0;
+let onLoadMoreClick;
+let commentsShown = COMMENTS_LOAD_COUNT;
 
 const createComment = ({avatar, name, message}) => {
   const comment = commentTemplate.cloneNode(true);
@@ -23,7 +23,7 @@ const createComment = ({avatar, name, message}) => {
   return comment;
 };
 
-const renderComments = () => {
+const renderComments = (comments) => {
   if (commentsShown >= comments.length) {
     commentsShown = comments.length;
     commentsLoader.classList.add('hidden');
@@ -42,11 +42,10 @@ const renderComments = () => {
 };
 
 const closeFullSizePhotoModal = () => {
-  commentsShown = 0;
+  commentsShown = COMMENTS_LOAD_COUNT;
   fullSizePhotoModal.classList.add('hidden');
   body.classList.remove('modal-open');
-  // eslint-disable-next-line no-use-before-define
-  document.removeEventListener('click', onLoadMoreClick);
+  commentsLoader.removeEventListener('click', onLoadMoreClick);
   // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onModalEscKeydown);
   // eslint-disable-next-line no-use-before-define
@@ -71,11 +70,6 @@ const onModalCloseEnterKeydown = (evt) => {
   }
 };
 
-const onLoadMoreClick = () => {
-  commentsShown += COMMENTS_LOAD_COUNT;
-  renderComments(comments);
-};
-
 const renderPhotoDetails = ({url, description, likes}) => {
   fullSizePhotoModal.querySelector('.big-picture__img img').src = url;
   fullSizePhotoModal.querySelector('.big-picture__img img').alt = description;
@@ -91,14 +85,17 @@ const openFullSizePhotoModal = (picture) => {
 
   document.addEventListener('keydown', onModalEscKeydown);
   document.addEventListener('keydown', onModalCloseEnterKeydown);
-  document.addEventListener('click', onLoadMoreClick);
+  photoModalClose.addEventListener('click', onModalCloseClick);
 
-  comments = picture.comments;
+  onLoadMoreClick = () => {
+    commentsShown += COMMENTS_LOAD_COUNT;
+    renderComments(picture.comments);
+  };
+
+  commentsLoader.addEventListener('click', onLoadMoreClick);
 
   renderPhotoDetails(picture);
-  renderComments(comments);
+  renderComments(picture.comments);
 };
-
-photoModalClose.addEventListener('click', onModalCloseClick);
 
 export {openFullSizePhotoModal};
