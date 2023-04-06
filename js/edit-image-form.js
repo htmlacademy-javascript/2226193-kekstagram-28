@@ -1,4 +1,6 @@
 import {isEscapeKey} from './util.js';
+import {resetScale} from './scale.js';
+import {resetEffects} from './effects.js';
 
 const MAX_HASHTAG_COUNT = 5;
 
@@ -33,6 +35,9 @@ const openEditImageModal = () => {
 const closeEditImageModal = () => {
   uploadForm.reset();
   pristine.reset();
+  resetScale();
+  resetEffects();
+
   imageOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   // eslint-disable-next-line no-use-before-define
@@ -70,12 +75,14 @@ pristine.addValidator(
   'Комментарий не может превышать 140 символов'
 );
 
-// Проверка формата хештега
+// Получение массива хештегов
 
 const getHashtags = (value) => {
   const hashtags = value.trim().split(' ').filter((hashtag) => hashtag.trim().length);
   return hashtags;
 };
+
+// Проверка формата хештегов
 
 const isHashtagValid = (hashtag) => {
   const hashtagRule = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -128,6 +135,8 @@ const onFormSubmit = (evt) => {
     uploadForm.submit();
   }
 };
+
+// Обработчики событий
 
 image.addEventListener('change', onFileInputChange);
 uploadForm.addEventListener('submit', onFormSubmit);
