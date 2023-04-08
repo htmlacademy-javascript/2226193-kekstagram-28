@@ -11,6 +11,12 @@ const image = uploadForm.querySelector('#upload-file');
 const imageModalCloseButton = imageOverlay.querySelector('#upload-cancel');
 const hashtagField = uploadForm.querySelector('.text__hashtags');
 const commentField = uploadForm.querySelector('.text__description');
+const submitButton = document.querySelector('.img-upload__submit');
+
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикация...'
+};
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -57,6 +63,7 @@ const onEscKeydown = (evt) => {
 
   if (isEscapeKey(evt) && !isTextFieldFocused) {
     evt.preventDefault();
+
     closeEditImageModal();
   }
 };
@@ -127,16 +134,31 @@ pristine.addValidator(
   'Добавить можно не более 5 хештегов'
 );
 
-// Обработчик отправки формы
-
-const onFormSubmit = (evt) => {
-  evt.preventDefault();
-  if (pristine.validate()) {
-    uploadForm.submit();
-  }
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
 };
 
-// Обработчики событий
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+// Обработчик отправки формы
+
+const setOnUploadFormSubmit = (onSuccess) => {
+  uploadForm.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      await onSuccess (new FormData(evt.target));
+      unblockSubmitButton();
+    }
+  });
+};
 
 image.addEventListener('change', onFileInputChange);
-uploadForm.addEventListener('submit', onFormSubmit);
+
+export {closeEditImageModal, setOnUploadFormSubmit};

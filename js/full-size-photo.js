@@ -55,6 +55,7 @@ const closeFullSizePhotoModal = () => {
 const onModalEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
+
     closeFullSizePhotoModal();
   }
 };
