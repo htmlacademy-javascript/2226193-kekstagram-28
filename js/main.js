@@ -1,8 +1,9 @@
 import {renderGallery} from './gallery.js';
+import {getFilteredPictures, init} from './filters.js';
 import {getData, sendData} from './api.js';
 import {closeEditImageModal, setOnUploadFormSubmit} from './edit-image-form.js';
 import {showSuccessMessage, showErrorMessage} from './message.js';
-import {showAlert} from './util.js';
+import {showAlert, debounce} from './util.js';
 
 setOnUploadFormSubmit(async (data) => {
   try {
@@ -16,7 +17,9 @@ setOnUploadFormSubmit(async (data) => {
 
 try {
   const data = await getData();
-  renderGallery(data);
+  const debouncedRenderGallery = debounce(renderGallery);
+  init(data, debouncedRenderGallery);
+  renderGallery(getFilteredPictures());
 } catch (err) {
   showAlert(err.message);
 }
