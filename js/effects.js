@@ -1,67 +1,67 @@
-const EFFECTS = [
+const Effects = [
   {
-    name: 'none',
-    filter: 'none',
-    range: {
+    NAME: 'none',
+    FILTER: 'none',
+    RANGE: {
       min: 0,
       max: 100,
     },
-    step: 1,
-    unit: '',
+    STEP: 1,
+    UNIT: '',
   },
   {
-    name: 'chrome',
-    filter: 'grayscale',
-    range: {
+    NAME: 'chrome',
+    FILTER: 'grayscale',
+    RANGE: {
       min: 0,
       max: 1,
     },
-    step: 0.1,
-    unit: '',
+    STEP: 0.1,
+    UNIT: '',
   },
   {
-    name: 'sepia',
-    filter: 'sepia',
-    range: {
+    NAME: 'sepia',
+    FILTER: 'sepia',
+    RANGE: {
       min: 0,
       max: 1,
     },
-    step: 0.1,
-    unit: '',
+    STEP: 0.1,
+    UNIT: '',
   },
   {
-    name: 'marvin',
-    filter: 'invert',
-    range: {
+    NAME: 'marvin',
+    FILTER: 'invert',
+    RANGE: {
       min: 0,
       max: 100,
     },
-    step: 1,
-    unit: '%',
+    STEP: 1,
+    UNIT: '%',
   },
   {
-    name: 'phobos',
-    filter: 'blur',
-    range: {
+    NAME: 'phobos',
+    FILTER: 'blur',
+    RANGE: {
       min: 0,
       max: 3,
     },
-    step: 0.1,
-    unit: 'px',
+    STEP: 0.1,
+    UNIT: 'px',
   },
   {
-    name: 'heat',
-    filter: 'brightness',
-    range: {
+    NAME: 'heat',
+    FILTER: 'brightness',
+    RANGE: {
       min: 1,
       max: 3,
     },
-    step: 0.1,
-    unit: '',
+    STEP: 0.1,
+    UNIT: '',
   },
 ];
 
-const DEFAULT_EFFECT = EFFECTS[0];
+const DEFAULT_EFFECT = Effects[0];
 let chosenEffect = DEFAULT_EFFECT;
 
 const previewImage = document.querySelector('.img-upload__preview img');
@@ -84,9 +84,9 @@ const hideSlider = () => {
 
 const updateSlider = () => {
   sliderElement.noUiSlider.updateOptions({
-    range: chosenEffect.range,
-    step: chosenEffect.step,
-    start: chosenEffect.range.max,
+    range: chosenEffect.RANGE,
+    step: chosenEffect.STEP,
+    start: chosenEffect.RANGE.max,
   });
 
   if (isDefault()) {
@@ -103,8 +103,8 @@ const onEffectsChange = (evt) => {
     return;
   }
 
-  chosenEffect = EFFECTS.find((effect) => effect.name === evt.target.value);
-  previewImage.className = `effects__preview--${chosenEffect.name}`;
+  chosenEffect = Effects.find((effect) => effect.NAME === evt.target.value);
+  previewImage.className = `effects__preview--${chosenEffect.NAME}`;
   updateSlider();
 };
 
@@ -113,8 +113,8 @@ const onEffectsChange = (evt) => {
 const onSliderUpdate = () => {
   const sliderValue = sliderElement.noUiSlider.get();
   previewImage.style.filter = isDefault()
-    ? DEFAULT_EFFECT.filter
-    : `${chosenEffect.filter}(${sliderValue}${chosenEffect.unit})`;
+    ? DEFAULT_EFFECT.FILTER
+    : `${chosenEffect.FILTER}(${sliderValue}${chosenEffect.UNIT})`;
   effectValue.value = sliderValue;
 };
 
@@ -126,9 +126,9 @@ const resetEffects = () => {
 // Изначальное создание и скрытие слайдера
 
 noUiSlider.create(sliderElement, {
-  range: DEFAULT_EFFECT.range,
-  start: DEFAULT_EFFECT.range.max,
-  step: DEFAULT_EFFECT.step,
+  range: DEFAULT_EFFECT.RANGE,
+  start: DEFAULT_EFFECT.RANGE.max,
+  step: DEFAULT_EFFECT.STEP,
   connect: 'lower',
   format: {
     to: function (value) {
