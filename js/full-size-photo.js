@@ -23,6 +23,8 @@ const createComment = ({avatar, name, message}) => {
   return comment;
 };
 
+// Рендер списка комментариев при открытии полноразмерного фото
+
 const renderComments = (comments) => {
   if (commentsShown >= comments.length) {
     commentsShown = comments.length;
@@ -40,6 +42,8 @@ const renderComments = (comments) => {
   commentsList.append(fragment);
   commentCount.innerHTML = `${commentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
 };
+
+// Закрытие просмотра полноразмерного фото
 
 const closeFullSizePhotoModal = () => {
   commentsShown = COMMENTS_LOAD_COUNT;
@@ -71,12 +75,16 @@ const onModalCloseEnterKeydown = (evt) => {
   }
 };
 
+// Рендер деталей описания при открытии просмотра полноразмерного фото
+
 const renderPhotoDetails = ({url, description, likes}) => {
   fullSizePhotoModal.querySelector('.big-picture__img img').src = url;
   fullSizePhotoModal.querySelector('.big-picture__img img').alt = description;
   fullSizePhotoModal.querySelector('.social__caption').textContent = description;
   fullSizePhotoModal.querySelector('.likes-count').textContent = likes;
 };
+
+// Открытие просмотра полноразмерного фото
 
 const openFullSizePhotoModal = (picture) => {
   fullSizePhotoModal.classList.remove('hidden');

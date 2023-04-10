@@ -1,51 +1,55 @@
-const PICTURES_COUNT = 10;
-const Filter = {
-  DEFAULT: 'filter-default',
-  RANDOM: 'filter-random',
-  DISCUSSED: 'filter-discussed',
-};
+import {renderThumbnails} from './thumbnail.js';
+import {debounce} from './util.js';
+
+const PICTURES_COUNT_TO_SHOW = 10;
+const TIMEOUT = 500;
 
 const filters = document.querySelector('.img-filters');
-let currentFilter = Filter.DEFAULT;
-let pictures = [];
+const filterForm = document.querySelector('.img-filters__form');
+const filterDefaultButton = document.querySelector('#filter-default');
+const filterRandomButton = document.querySelector('#filter-random');
+const filterDiscussedButton = document.querySelector('#filter-discussed');
+
+const showFilters = () => filters.classList.remove('img-filters--inactive');
 
 const sortRandomly = () => Math.random() - 0.5;
 
 const sortByComments = (pictureA, pictureB) => pictureB.comments.length - pictureA.comments.length;
 
-const getFilteredPictures = () => {
-  switch (currentFilter) {
-    case Filter.RANDOM:
-      return [...pictures].sort(sortRandomly).slice(0, PICTURES_COUNT);
-    case Filter.DISCUSSED:
-      return [...pictures].sort(sortByComments);
+const getFilteredPictures = (pictures, filterButton) => {
+  switch (filterButton) {
+    case filterRandomButton:
+      return pictures.slice().sort(sortRandomly).slice(0, PICTURES_COUNT_TO_SHOW);
+    case filterDiscussedButton:
+      return pictures.slice().sort(sortByComments);
     default:
-      return [...pictures];
+      return pictures;
   }
 };
 
-const setOnFilterClick = (onFilterChange) => {
-  filters.addEventListener('click', (evt) => {
-    if (!evt.target.classList.contains('img-filters__button')) {
-      return;
-    }
+const removeThumbnails = (thumbnails) => thumbnails.forEach((thumbnail) => thumbnail.remove());
 
-    const clickedButton = evt.target;
-    if (clickedButton.id === currentFilter) {
-      return;
-    }
+// Обработка смены фильтра картинок
 
-    filters.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
-    clickedButton.classList.add('img-filters__button--active');
-    currentFilter = clickedButton.id;
-    onFilterChange(getFilteredPictures());
-  });
+const onFilterButtonClick = (evt, pictures) => {
+  const thumbnails = document.querySelectorAll('.picture');
+  const filterButton = evt.target;
+
+  filterDefaultButton.classList.remove('img-filters__button--active');
+  filterRandomButton.classList.remove('img-filters__button--active');
+  filterDiscussedButton.classList.remove('img-filters__button--active');
+  filterButton.classList.add('img-filters__button--active');
+
+  removeThumbnails(thumbnails);
+  renderThumbnails(getFilteredPictures(pictures, filterButton));
 };
 
-const init = (loadedPictures, cb) => {
-  filters.classList.remove('img-filters--inactive');
-  pictures = [...loadedPictures];
-  setOnFilterClick(cb);
+// Таймаут на перерисовку галерии миниатюр при смене фильтра
+
+const setupFiltering = (pictures) => {
+  filterForm.addEventListener('click', debounce((evt) => {
+    onFilterButtonClick(evt, pictures);
+  }, TIMEOUT));
 };
 
-export {getFilteredPictures, init};
+export {setupFiltering, showFilters};
