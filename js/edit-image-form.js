@@ -1,22 +1,26 @@
 import {isEscapeKey} from './util.js';
-import {resetScale} from './scale.js';
-import {resetEffects} from './effects.js';
+import {resetScale} from './image-scale.js';
+import {resetEffects} from './image-effects.js';
+import {sendData} from './api.js';
+import {showSuccessMessage, showErrorMessage} from './messages.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const MAX_HASHTAG_COUNT = 5;
-
-const body = document.querySelector('body');
-const uploadForm = document.querySelector('.img-upload__form');
-const imageOverlay = uploadForm.querySelector('.img-upload__overlay');
-const image = uploadForm.querySelector('#upload-file');
-const imageModalCloseButton = imageOverlay.querySelector('#upload-cancel');
-const hashtagField = uploadForm.querySelector('.text__hashtags');
-const commentField = uploadForm.querySelector('.text__description');
-const submitButton = document.querySelector('.img-upload__submit');
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
   SENDING: 'Публикация...'
 };
+
+const body = document.querySelector('body');
+const uploadForm = document.querySelector('.img-upload__form');
+const imageOverlay = uploadForm.querySelector('.img-upload__overlay');
+const uploadFileInput = uploadForm.querySelector('#upload-file');
+const uploadImage = document.querySelector('.img-upload__preview img');
+const imageModalCloseButton = imageOverlay.querySelector('#upload-cancel');
+const hashtagField = uploadForm.querySelector('.text__hashtags');
+const commentField = uploadForm.querySelector('.text__description');
+const submitButton = document.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -29,6 +33,7 @@ const pristine = new Pristine(uploadForm, {
 const openEditImageModal = () => {
   imageOverlay.classList.remove('hidden');
   body.classList.add('modal-open');
+  resetScale();
 
   // eslint-disable-next-line no-use-before-define
   document.addEventListener('keydown', onEscKeydown);
@@ -41,13 +46,25 @@ const openEditImageModal = () => {
 const closeEditImageModal = () => {
   uploadForm.reset();
   pristine.reset();
-  resetScale();
   resetEffects();
 
   imageOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onEscKeydown);
+};
+
+// Загрузка изображения для редактирования
+
+const onImageUpload = () => {
+  const file = uploadFileInput.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    uploadImage.src = '';
+    uploadImage.src = URL.createObjectURL(file);
+  }
 };
 
 // Обработка открытия окна редактирования
@@ -60,8 +77,9 @@ const onFileInputChange = () => {
 
 const onEscKeydown = (evt) => {
   const isTextFieldFocused = document.activeElement === hashtagField || document.activeElement === commentField;
+  const errorPopup = document.querySelector('.error');
 
-  if (isEscapeKey(evt) && !isTextFieldFocused) {
+  if (!errorPopup && isEscapeKey(evt) && !isTextFieldFocused) {
     evt.preventDefault();
 
     closeEditImageModal();
@@ -134,6 +152,8 @@ pristine.addValidator(
   'Добавить можно не более 5 хештегов'
 );
 
+// Блокировка и разблокировка кнопки при отправке формы
+
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = SubmitButtonText.SENDING;
@@ -146,19 +166,23 @@ const unblockSubmitButton = () => {
 
 // Обработчик отправки формы
 
-const setOnUploadFormSubmit = (onSuccess) => {
-  uploadForm.addEventListener('submit', async (evt) => {
+const setUploadFormSubmit = (onSuccess) => {
+  uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
-      await onSuccess (new FormData(evt.target));
-      unblockSubmitButton();
+      sendData(new FormData(evt.target))
+        .then(onSuccess)
+        .then(showSuccessMessage)
+        .catch(showErrorMessage)
+        .finally(unblockSubmitButton);
     }
   });
 };
 
-image.addEventListener('change', onFileInputChange);
+uploadFileInput.addEventListener('change', onFileInputChange);
+uploadFileInput.addEventListener('change', onImageUpload);
 
-export {closeEditImageModal, setOnUploadFormSubmit};
+export {closeEditImageModal, setUploadFormSubmit};

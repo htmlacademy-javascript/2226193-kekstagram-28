@@ -3,45 +3,49 @@ const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const DEFAULT_SCALE = 100;
 
-const smallerButtonElement = document.querySelector('.scale__control--smaller');
-const biggerButtonElement = document.querySelector('.scale__control--bigger');
+const zoomOutButton = document.querySelector('.scale__control--smaller');
+const zoomInButton = document.querySelector('.scale__control--bigger');
 const scaleValue = document.querySelector('.scale__control--value');
-const previewImage = document.querySelector('.img-upload__preview img');
+const uploadImage = document.querySelector('.img-upload__preview img');
 
 // Изменение размера изображения
 
 const scaleImage = (value) => {
-  previewImage.style.transform = `scale(${value / 100})`;
-  scaleValue.value = `${value}%`;
+  uploadImage.style.transform = `scale(${value / 100})`;
 };
 
 // Обработка нажатия кнопки уменьшения размера изображения
 
-const onSmallerButtonClick = () => {
+const onZoomOutButtonClick = () => {
   const currentValue = parseInt(scaleValue.value, 10);
   let newValue = currentValue - SCALE_STEP;
   if (newValue < MIN_SCALE) {
     newValue = MIN_SCALE;
   }
+  scaleValue.value = `${newValue}%`;
   scaleImage(newValue);
 };
 
 // Обработка нажатия кнопки увеличения размера изображения
 
-const onBiggerButtonClick = () => {
+const onZoomInButtonClick = () => {
   const currentValue = parseInt(scaleValue.value, 10);
   let newValue = currentValue + SCALE_STEP;
   if (newValue > MAX_SCALE) {
     newValue = MAX_SCALE;
   }
+  scaleValue.value = `${newValue}%`;
   scaleImage(newValue);
 };
 
-const resetScale = () => scaleImage(DEFAULT_SCALE);
+const resetScale = () => {
+  scaleValue.value = '100%';
+  scaleImage(DEFAULT_SCALE);
+};
 
 // Обработчики событий
 
-smallerButtonElement.addEventListener('click', onSmallerButtonClick);
-biggerButtonElement.addEventListener('click', onBiggerButtonClick);
+zoomOutButton.addEventListener('click', onZoomOutButtonClick);
+zoomInButton.addEventListener('click', onZoomInButtonClick);
 
 export {resetScale};

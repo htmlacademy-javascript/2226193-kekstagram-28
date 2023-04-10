@@ -1408,3 +1408,12 @@ main {
 .hidden {
   display: none;
 }
+
+.img-upload__field-wrapper__error {
+  margin-top: -18px;
+  margin-bottom: 8px;
+  padding: 5px;
+  background-color: #767575;
+  text-transform: none;
+  opacity: 0.8;
+}
