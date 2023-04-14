@@ -15,31 +15,28 @@ const errorInner = errorMessage.querySelector('.error__inner');
 const closeSuccessMessage = () => {
   successMessage.remove();
 
-  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onEscKeydownSuccess);
-  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('click', onAnyClickSuccess);
-  // eslint-disable-next-line no-use-before-define
   successButton.removeEventListener('click', onSuccessButtonClick);
 };
 
-const onEscKeydownSuccess = (evt) => {
+function onEscKeydownSuccess (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
 
     closeSuccessMessage();
   }
-};
+}
 
-const onSuccessButtonClick = () => {
+function onSuccessButtonClick () {
   closeSuccessMessage();
-};
+}
 
-const onAnyClickSuccess = (evt) => {
+function onAnyClickSuccess (evt) {
   if (evt.target !== successInner) {
     closeSuccessMessage();
   }
-};
+}
 
 // Показ сообщения об успехе
 
@@ -56,31 +53,28 @@ const showSuccessMessage = () => {
 const closeErrorMessage = () => {
   errorMessage.remove();
 
-  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onEscKeydownError);
-  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('click', onAnyClickError);
-  // eslint-disable-next-line no-use-before-define
   errorButton.removeEventListener('click', onErrorButtonClick);
 };
 
-const onEscKeydownError = (evt) => {
+function onEscKeydownError (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
 
     closeErrorMessage();
   }
-};
+}
 
-const onErrorButtonClick = () => {
+function onErrorButtonClick () {
   closeErrorMessage();
-};
+}
 
-const onAnyClickError = (evt) => {
+function onAnyClickError (evt) {
   if (evt.target !== errorInner) {
     closeErrorMessage();
   }
-};
+}
 
 // Показ сообщения об ошибке
 
