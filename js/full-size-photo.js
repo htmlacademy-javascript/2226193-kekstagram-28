@@ -50,30 +50,28 @@ const closeFullSizePhotoModal = () => {
   fullSizePhotoModal.classList.add('hidden');
   body.classList.remove('modal-open');
   commentsLoader.removeEventListener('click', onLoadMoreClick);
-  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onModalEscKeydown);
-  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onModalCloseEnterKeydown);
 };
 
-const onModalEscKeydown = (evt) => {
+function onModalEscKeydown (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
 
     closeFullSizePhotoModal();
   }
-};
+}
 
 const onModalCloseClick = () => {
   closeFullSizePhotoModal();
 };
 
-const onModalCloseEnterKeydown = (evt) => {
+function onModalCloseEnterKeydown (evt) {
   if (isEnterKey(evt)) {
     evt.preventDefault();
     closeFullSizePhotoModal();
   }
-};
+}
 
 // Рендер деталей описания при открытии просмотра полноразмерного фото
 

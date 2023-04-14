@@ -35,9 +35,7 @@ const openEditImageModal = () => {
   body.classList.add('modal-open');
   resetScale();
 
-  // eslint-disable-next-line no-use-before-define
   document.addEventListener('keydown', onEscKeydown);
-  // eslint-disable-next-line no-use-before-define
   imageModalCloseButton.addEventListener('click', onModalCloseClick);
 };
 
@@ -50,7 +48,6 @@ const closeEditImageModal = () => {
 
   imageOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
-  // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onEscKeydown);
 };
 
@@ -75,7 +72,7 @@ const onFileInputChange = () => {
 
 // Обработка закрытия окна редактирования
 
-const onEscKeydown = (evt) => {
+function onEscKeydown (evt) {
   const isTextFieldFocused = document.activeElement === hashtagField || document.activeElement === commentField;
   const errorPopup = document.querySelector('.error');
 
@@ -84,11 +81,11 @@ const onEscKeydown = (evt) => {
 
     closeEditImageModal();
   }
-};
+}
 
-const onModalCloseClick = () => {
+function onModalCloseClick () {
   closeEditImageModal();
-};
+}
 
 // Проверка длины комментария
 

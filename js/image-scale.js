@@ -39,7 +39,7 @@ const onZoomInButtonClick = () => {
 };
 
 const resetScale = () => {
-  scaleValue.value = '100%';
+  scaleValue.value = `${DEFAULT_SCALE}%`;
   scaleImage(DEFAULT_SCALE);
 };
 
