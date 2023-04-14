@@ -6,7 +6,6 @@ const TIMEOUT = 500;
 
 const filters = document.querySelector('.img-filters');
 const filterForm = document.querySelector('.img-filters__form');
-const filterDefaultButton = document.querySelector('#filter-default');
 const filterRandomButton = document.querySelector('#filter-random');
 const filterDiscussedButton = document.querySelector('#filter-discussed');
 
@@ -35,9 +34,8 @@ const onFilterButtonClick = (evt, pictures) => {
   const thumbnails = document.querySelectorAll('.picture');
   const filterButton = evt.target;
 
-  filterDefaultButton.classList.remove('img-filters__button--active');
-  filterRandomButton.classList.remove('img-filters__button--active');
-  filterDiscussedButton.classList.remove('img-filters__button--active');
+  const oldActiveButton = filterForm.querySelector('.img-filters__button--active');
+  oldActiveButton.classList.remove('img-filters__button--active');
   filterButton.classList.add('img-filters__button--active');
 
   removeThumbnails(thumbnails);
